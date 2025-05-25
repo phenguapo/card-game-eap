@@ -1,0 +1,337 @@
+{
+  "deck": [
+    [
+      {
+        "value": 7,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 8,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 4,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 11,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 13,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      }
+    ],
+    [
+      {
+        "value": 8,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 9,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 11,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 7,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 13,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 4,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 4,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      }
+    ],
+    [
+      {
+        "value": 4,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 4,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 7,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 13,
+        "suit": "hearts",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 10,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 13,
+        "suit": "hearts",
+        "is_open": true,
+        "is_matched": true
+      },
+      {
+        "value": 11,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 11,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      }
+    ],
+    [
+      {
+        "value": 10,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 7,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 4,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 3,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 11,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 9,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 6,
+        "suit": "clubs",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 14,
+        "suit": "hearts",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 11,
+        "suit": "spades",
+        "is_open": false,
+        "is_matched": false
+      },
+      {
+        "value": 5,
+        "suit": "diamonds",
+        "is_open": false,
+        "is_matched": false
+      }
+    ]
+  ],
+  "players": {
+    "players": [],
+    "current_index": 0
+  },
+  "current_player": {
+    "name": "Player 3"
+  },
+  "scores": {
+    "Player 1": 2,
+    "Player 2": 0,
+    "Player 3": 1,
+    "Player 4": 0
+  }
+}
