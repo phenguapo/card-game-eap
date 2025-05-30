@@ -128,9 +128,13 @@ class ScreenManager:
 
     # Μέθοδος για την αναδιαμόρφωση της εικόνας του φόντου
     def resize_background(self, width, height):
+        if self.bg_image is None:
+            return  # Αν δεν έχει φορτωθεί ακόμα background εικόνα, σταμάτα
+
         resized_bg = self.bg_image.resize((width, height), Image.LANCZOS)
         self.bg = ImageTk.PhotoImage(resized_bg)
         self.canvas.itemconfig(self.image_id, image=self.bg)
+
 
     # Μέθοδος για το καταλλήλο μέγεθος γραμματοσειράς
     def resize_fonts(self, width, height):
@@ -724,10 +728,7 @@ class StartGame(ScreenManager):
         self.cards_layout()
 
         # Binding event για την αναδιαμόρφωση του μεγέθους της τράπουλας σε περίπτωση αλλαγής μεγέθους καμβά
-        self.canvas.bind(
-            "<Configure>",
-            lambda event: self.resize_cards(event, self.level, self.players),
-        )
+        self.canvas.bind("<Configure>", self.resize_cards)
 
     # Μέθοδος για την δημιουργία της διάταξης της τράπουλας
     def cards_layout(self):
@@ -814,7 +815,7 @@ class StartGame(ScreenManager):
         ):
             return
 
-        print(f"[DEBUG] on_card_click: row={row}, col={col}, bypass={bypass_lock}")
+        # print(f"[DEBUG] on_card_click: row={row}, col={col}, bypass={bypass_lock}")
 
         card = self.deck_manager.board[row][col]
         if card.is_open or card.is_matched:
@@ -936,34 +937,58 @@ class StartGame(ScreenManager):
         
     # Μέθοδος για την αναδιαμόρφωση του μεγέθους της τράπουλας σε περίπτωση αλλαγής μεγέθους καμβά
     def resize_cards(self, event):
-        self.destroy_widgets()
-
-        # Αναδιαμόρφωση της εικόνας φόντου
         width, height = event.width, event.height
-        # self.resize_background(width, height)
 
-        # Αναδιαμόρφωση μεγέθους τράπουλας
-        card_width = int(width * 0.06)
-        card_height = int(height * 0.16)
+        # Αναδιαμόρφωση εικόνας φόντου
+        self.resize_background(width, height)
 
-        width_ratio, height_ratio = self.get_ratios(width, height)
+        # Νέες διαστάσεις καρτών
+        self.card_width = int(width * 0.057)
+        self.card_height = int(height * 0.11)
 
-        if width_ratio == height_ratio and width == ScreenManager.initial_cnv_width:
-            resized_card = self.card_photo.resize(
-                (card_width, card_height), Image.LANCZOS
-            )
-            self.card_back = ImageTk.PhotoImage(resized_card)
-        elif width_ratio > height_ratio:
-            resized_card = self.card_photo.resize(
-                (card_width, card_height), Image.LANCZOS
-            )
-            self.card_back = ImageTk.PhotoImage(resized_card)
-        else:
-            resized_card = self.card_photo.resize(
-                (card_width, card_height), Image.LANCZOS
-            )
-            self.card_back = ImageTk.PhotoImage(resized_card)
+        # Νέο resized card back
+        resized_card_back = self.card_photo.resize((self.card_width, self.card_height), Image.LANCZOS)
+        self.card_back = ImageTk.PhotoImage(resized_card_back)
 
+        # Αναπροσαρμογή αναλογιών για θέση των καρτών
+        layout_settings = {
+            "easy": (0.2, 0.25),
+            "medium": (0.15, 0.1),
+            "hard": (0.05, 0.1),
+        }
+        difficulty = self.level.strip().lower()
+        start_x, start_y = layout_settings[difficulty]
+
+        for i, row in enumerate(self.card_widgets):
+            for j, label in enumerate(row):
+                if label:
+                    card = self.deck_manager.board[i][j]
+                    # Αν η κάρτα είναι ανοιχτή, δείξε το face
+                    if card.is_open:
+                        card_str = str(card).lower().replace(" ", "_")
+                        if not card_str.endswith(".png"):
+                            card_str += ".png"
+                        card_path = os.path.join("assets/images/cards", card_str)
+                        try:
+                            # print(f"[INFO] prospathei na fortothei h karta apto path: {card_path}")
+                            face_img = Image.open(card_path)
+                            face_img = face_img.resize((self.card_width, self.card_height), Image.LANCZOS)
+                            card_face = ImageTk.PhotoImage(face_img)
+                            label.config(image=card_face)
+                            label.image = card_face
+                        except Exception as e:
+                            print(f"[ERROR] Cannot resize card face: {e}")
+                            label.config(image="", text="?", bg="red")
+                    else:
+                        label.config(image=self.card_back)
+                        label.image = self.card_back
+
+                    # Υπολογισμός νέας θέσης
+                    relx = start_x + j * 0.07
+                    rely = start_y + i * 0.18
+                    label.place(relx=relx, rely=rely, relwidth=0.06, relheight=0.12)
+
+        # Ενημέρωση κουμπιών
         style.configure(
             "My.TButton",
             background="#6666FF",
@@ -975,9 +1000,16 @@ class StartGame(ScreenManager):
             ),
         )
 
-        self.start_game_layout_buttons()
-        self.show_score()
-        self.cards_layout()
+        # Ενημέρωση σκορ
+        for player, label in self.score_labels.items():
+            label.config(
+                font=(
+                    "Times New Roman",
+                    self.scaled_font_size("Score", width, height),
+                    "bold",
+                )
+            )
+
 
     # Μέθοδος για την δημιουργία ετικετών για το σκορ των παικτών
     # doulevei tr

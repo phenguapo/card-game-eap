@@ -37,14 +37,21 @@ class DeckManager:
         total_cards = rows * cols
         pairs_needed = total_cards // 2
 
-        if pairs_needed <= len(allowed_values):
-            selected_values = random.sample(allowed_values, pairs_needed)
-        else:
-            selected_values = random.choices(allowed_values, k=pairs_needed)
+        # Δημιουργούμε όλα τα δυνατά μοναδικά φύλλα (value, suit)
+        full_unique_cards = [
+            (value, suit) for value in allowed_values for suit in self.suits
+        ]
 
+        # Τσεκ αν υπάρχουν αρκετά μοναδικά για τα απαιτούμενα pairs
+        if pairs_needed > len(full_unique_cards):
+            raise ValueError("Δεν υπάρχουν αρκετά μοναδικά ζευγάρια καρτών για αυτό το επίπεδο.")
+
+        # Επιλογή n μοναδικών φύλλων
+        selected_pairs = random.sample(full_unique_cards, pairs_needed)
+
+        # Δημιουργία deck με 2 copies από κάθε ζεύγος
         deck = []
-        for value in selected_values:
-            suit = random.choice(self.suits)
+        for value, suit in selected_pairs:
             deck.append(Card(value, suit))
             deck.append(Card(value, suit))
 
@@ -62,6 +69,7 @@ class DeckManager:
 
         self.history = []
         self.selected_cards = []
+
 
     def select_card(self, row, col):
         if (
@@ -105,11 +113,11 @@ class DeckManager:
 
         return False  # Δεν αδειάζουμε selected_cards, το GUI θα το κάνει μετά
 
-    def close_all(self):
-        for row in self.board:
-            for card in row:
-                if card and not card.is_matched:
-                    card.is_open = False
+    # def close_all(self):
+    #     for row in self.board:
+    #         for card in row:
+    #             if card and not card.is_matched:
+    #                 card.is_open = False
 
     def update_history(self, card):
         self.history.append(card)
@@ -119,13 +127,13 @@ class DeckManager:
         # Αφαίρεση καρτών ίδιας αξίας (εκτός της τρέχουσας)
         self.history = [c for c in self.history if c.value != card.value or c == card]
 
-    def remove_card(self, row, col):
-        self.board[row][col] = None
+    # def remove_card(self, row, col):
+    #     self.board[row][col] = None
 
-    def reset_card_position(self, row, col):
-        card = self.board[row][col]
-        if card and not card.is_matched:
-            card.is_open = False
+    # def reset_card_position(self, row, col):
+    #     card = self.board[row][col]
+    #     if card and not card.is_matched:
+    #         card.is_open = False
 
     def get_board_size(self):
         return len(self.board), len(self.board[0])

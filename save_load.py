@@ -9,7 +9,7 @@ def save_game(deck_manager, current_player, scores):
         "deck": deck_manager.save_to_dict(),
         "players": players.save_to_dict(),
         "current_player": current_player,
-        "scores": scores,  # ✅ add this
+        "scores": scores,  # add this
     }
 
     with open(SAVE_FILE, "w", encoding="utf-8") as f:
@@ -19,14 +19,14 @@ def save_game(deck_manager, current_player, scores):
 
 
 def load_game():
-    from deck import DeckManager  # ✅ Local import avoids circular issues
+    from deck import DeckManager  # Local import avoids circular issues
 
     with open(SAVE_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Επαναφορά deck
     deck_manager = DeckManager()
-    deck_manager.load_from_dict(data["deck"])  # ✅ FIXED
+    deck_manager.load_from_dict(data["deck"])  # FIXED
 
     # Επαναφορά παικτών
     players.load_from_save(data["players"])
