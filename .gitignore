@@ -1,2 +1,5 @@
 # Ignore the “other” folder
 other/
+
+rules.py
+players.py
