@@ -540,7 +540,7 @@ class StartGame(ScreenManager):
 
         if self.vs_computer and self.current_player == "Computer":
             self.lock_board = True
-            self.canvas.after(2000, self.computer_play)
+            self.canvas.after(1000, self.computer_play)
 
     # Μέθοδος για την δημιουργία και διάταξη των κουμπιών
     def start_game_layout_buttons(self):
@@ -747,7 +747,6 @@ class StartGame(ScreenManager):
 
     # Μέθοδος για την δημιουργία της διάταξης της τράπουλας
     def cards_layout(self):
-        # Χρησιμοποίησε μόνο εάν δεν υπάρχει deck ή είναι άδειο
         if (
             not hasattr(self, "deck_manager")
             or self.deck_manager is None
@@ -792,7 +791,6 @@ class StartGame(ScreenManager):
                     )
                     label.place(relx=x, rely=y, relwidth=0.06, relheight=0.12)
 
-                    # Αν το φύλλο είναι ήδη ανοιχτό
                     if card.is_open:
                         card_name = str(card).lower().replace(" ", "_")
                         card_path = os.path.join("assets/images/cards", card_name)
@@ -860,7 +858,7 @@ class StartGame(ScreenManager):
 
         if needs_check:
             self.lock_board = True
-            self.canvas.after(1000, self.resolve_turn)
+            self.canvas.after(500, self.resolve_turn)
 
     def update_score_label(self, player):
         self.score_labels[player].config(text=f"Score: {self.scores[player]}")
@@ -872,52 +870,63 @@ class StartGame(ScreenManager):
             self.scores[self.current_player] += pts
             self.update_score_label(self.current_player)
 
-            self.lock_board = False
-            self.check_game_over()
 
-            self.deck_manager.selected_cards = []
+            if action == "third_match_close_all":
+                for (r, c) in self.deck_manager.selected_cards:
+                    lbl = self.card_widgets[r][c]
+                    lbl.config(image=self.card_back)
+                    lbl.image = self.card_back
+                    self.deck_manager.board[r][c].is_open = False
+                self.deck_manager.selected_cards.clear()
 
             if action == "allow_third":
                 self.lock_board = False
                 if self.vs_computer and self.current_player == "Computer":
-                    self.canvas.after(600, self.computer_play)
+                    self.canvas.after(500, self.computer_play)
+                return
+
+            if self.deck_manager.is_game_over():
+                self.check_game_over()
                 return
 
             advance = 0 if action == "play_again" else 1
             if action == "skip_next":
                 advance = 2
 
-            self.current_player_index = (self.current_player_index + advance) % len(
-                self.player_order
-            )
+            self.current_player_index = (self.current_player_index + advance) % len(self.player_order)
             self.current_player = self.player_order[self.current_player_index]
             self.show_banner(f"{self.current_player}'s turn")
 
             if self.vs_computer and self.current_player == "Computer":
                 self.lock_board = True
-                self.canvas.after(800, self.computer_play)
+                self.canvas.after(500, self.computer_play)
+            else:
+                self.lock_board = False
+
+            self.check_game_over()
             return
 
-        for r, c in self.deck_manager.selected_cards:
+        # --- Περίπτωση “χωρίς ταίρι” (matched=False): κλείνουμε όλες τις selected_cards ---
+        for (r, c) in self.deck_manager.selected_cards:
             lbl = self.card_widgets[r][c]
             lbl.config(image=self.card_back)
             lbl.image = self.card_back
             self.deck_manager.board[r][c].is_open = False
 
-        self.deck_manager.selected_cards = []
+        self.deck_manager.selected_cards.clear()
         self.lock_board = False
 
-        self.deck_manager.selected_cards = []
-
-        self.current_player_index = (self.current_player_index + 1) % len(
-            self.player_order
-        )
+        self.current_player_index = (self.current_player_index + 1) % len(self.player_order)
         self.current_player = self.player_order[self.current_player_index]
-        self.show_banner(f"{self.current_player}'s turn")
 
+        if self.deck_manager.is_game_over():
+            self.check_game_over()
+            return
+
+        self.show_banner(f"{self.current_player}'s turn")
         if self.vs_computer and self.current_player == "Computer":
             self.lock_board = True
-            self.canvas.after(800, self.computer_play)
+            self.canvas.after(500, self.computer_play)
 
         self.check_game_over()
 
@@ -942,7 +951,7 @@ class StartGame(ScreenManager):
             bd.history = [rc for rc in bd.history if rc not in pair]
             (r1, c1), (r2, c2) = pair
             self.on_card_click(r1, c1, bypass_lock=True)
-            self.canvas.after(600, lambda: self.on_card_click(r2, c2, bypass_lock=True))
+            self.canvas.after(500, lambda: self.on_card_click(r2, c2, bypass_lock=True))
             return
 
         closed = [
@@ -985,11 +994,10 @@ class StartGame(ScreenManager):
                 r2, c2 = random.choice(new_closed)
                 self.on_card_click(r2, c2, bypass_lock=True)
 
-        self.canvas.after(600, play_second_card)
+        self.canvas.after(500, play_second_card)
 
-    # Μέθοδος για την αναδιαμόρφωση του μεγέθους της τράπουλας σε περίπτωση αλλαγής μεγέθους καμβά
     def resize_cards(self, event):
-        """Adjust card bitmaps and layout whenever the canvas is resized."""
+        """Μέθοδος για την αναδιαμόρφωση του μεγέθους της τράπουλας σε περίπτωση αλλαγής μεγέθους καμβά."""
         if not hasattr(self, "card_positions"):
             return
 

@@ -1,5 +1,7 @@
 # Ignore the “other” folder
 other/
+.idea/
+__pycache__/
 
 rules.py
 players.py
