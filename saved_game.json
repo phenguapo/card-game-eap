@@ -3,32 +3,6 @@
     "board": [
       [
         {
-          "value": 11,
-          "suit": "spades",
-          "is_matched": true,
-          "is_open": true
-        },
-        {
-          "value": 11,
-          "suit": "diamonds",
-          "is_matched": true,
-          "is_open": true
-        },
-        {
-          "value": 13,
-          "suit": "clubs",
-          "is_matched": true,
-          "is_open": true
-        },
-        {
-          "value": 13,
-          "suit": "spades",
-          "is_matched": true,
-          "is_open": true
-        }
-      ],
-      [
-        {
           "value": 10,
           "suit": "clubs",
           "is_matched": false,
@@ -36,39 +10,39 @@
         },
         {
           "value": 12,
-          "suit": "clubs",
+          "suit": "diamonds",
           "is_matched": false,
           "is_open": false
         },
         {
-          "value": 11,
-          "suit": "clubs",
-          "is_matched": true,
-          "is_open": true
+          "value": 10,
+          "suit": "hearts",
+          "is_matched": false,
+          "is_open": false
         },
         {
           "value": 13,
-          "suit": "diamonds",
+          "suit": "hearts",
           "is_matched": false,
           "is_open": false
         }
       ],
       [
         {
-          "value": 13,
-          "suit": "hearts",
+          "value": 11,
+          "suit": "diamonds",
           "is_matched": false,
           "is_open": false
         },
         {
-          "value": 11,
-          "suit": "hearts",
+          "value": 13,
+          "suit": "spades",
           "is_matched": true,
           "is_open": true
         },
         {
-          "value": 10,
-          "suit": "spades",
+          "value": 11,
+          "suit": "hearts",
           "is_matched": false,
           "is_open": false
         },
@@ -81,35 +55,61 @@
       ],
       [
         {
+          "value": 11,
+          "suit": "clubs",
+          "is_matched": false,
+          "is_open": false
+        },
+        {
+          "value": 13,
+          "suit": "diamonds",
+          "is_matched": true,
+          "is_open": true
+        },
+        {
+          "value": 12,
+          "suit": "clubs",
+          "is_matched": false,
+          "is_open": false
+        },
+        {
           "value": 10,
-          "suit": "hearts",
+          "suit": "spades",
+          "is_matched": false,
+          "is_open": false
+        }
+      ],
+      [
+        {
+          "value": 13,
+          "suit": "clubs",
           "is_matched": false,
           "is_open": false
         },
         {
           "value": 12,
           "suit": "spades",
-          "is_matched": true,
-          "is_open": true
+          "is_matched": false,
+          "is_open": false
+        },
+        {
+          "value": 11,
+          "suit": "spades",
+          "is_matched": false,
+          "is_open": false
         },
         {
           "value": 12,
           "suit": "hearts",
           "is_matched": false,
           "is_open": false
-        },
-        {
-          "value": 12,
-          "suit": "diamonds",
-          "is_matched": true,
-          "is_open": true
         }
       ]
     ]
   },
-  "current_player": "Player 1",
+  "current_player": "Player 2",
   "scores": {
-    "Player 1": 60,
+    "Player 1": 0,
     "Player 2": 20
   },
   "level": "Easy",

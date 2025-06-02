@@ -3,6 +3,11 @@
 import random
 from typing import Literal, Tuple, List, Optional
 
+JACK = 11
+KING = 12
+QUEEN = 13
+
+
 Action = Literal[
     "play_again",             # ο ίδιος παίκτης παίζει ξανά
     "skip_next",              # ο επόμενος παίκτης χάνει σειρά
@@ -16,7 +21,7 @@ def points_for_value(val: int) -> int:
     Επιστρέφει την τιμή-πόντο μιας κάρτας:
       Άσσος (1) → 1 πόντος,
       2–10 → η αριθμητική τιμή,
-      J(11), Q(12), K(13) → 10 πόντοι.
+      J(11), K(12), Q(13) → 10 πόντοι.
     """
     if val == 1:
         return 1
@@ -164,7 +169,7 @@ class DeckManager:
                 else:
                     unmatched_initial = (ri, ci)
 
-            # Αν η τρίτη είναι Q (12) ή K (13) και ταιριάζει με ένα από τα αρχικά
+            # Αν η τρίτη είναι Q (13) ή K (12) και ταιριάζει με ένα από τα αρχικά
             if matched_initial and third.value in (12, 13):
                 third.is_matched = True
                 mi_r, mi_c = matched_initial
@@ -197,7 +202,7 @@ class DeckManager:
         card2 = self.board[r2][c2]
 
 
-        if card1.value == 13 and card2.value == 12:
+        if card1.value == QUEEN and card2.value == KING:
             self.qk_pair = [(r1, c1), (r2, c2)]
             self.selected_cards.clear()
             self.allow_third = True
@@ -214,10 +219,10 @@ class DeckManager:
         pts = points_for_value(card1.value) * 2
 
         # J+J ⇒ ο ίδιος παίκτης ξαναπαίζει
-        if card1.value == 11:
+        if card1.value == JACK:
             return True, pts, "play_again"
         # K+K ⇒ ο επόμενος χάνει σειρά
-        if card1.value == 13:
+        if card1.value == KING:
             return True, pts, "skip_next"
         # Κανονικό ταίριασμα
         return True, pts, "none"

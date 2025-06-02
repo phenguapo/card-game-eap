@@ -3,10 +3,16 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import os
 import random
-
-# import inspect
 from deck import DeckManager
 
+# ------------------------------------------------------------------------
+PLAYER_LABELS = {
+    "Players 2":        ["Player 1", "Player 2"],
+    "Players 3":        ["Player 1", "Player 2", "Player 3"],
+    "Players 4":        ["Player 1", "Player 2", "Player 3", "Player 4"],
+    "Player - Computer":["Player",   "Computer"],
+}
+# ------------------------------------------------------------------------
 
 class ScreenManager:
     """Ορισμός και αρχικοποίηση του μετρητή και των χαρακτηριστικών της κλάσης
@@ -26,6 +32,7 @@ class ScreenManager:
         self.label_menu = None
         self.label_game_level = None
         self.label_player_selection = None
+        self.player_labels = PLAYER_LABELS
 
         # Ορισμός και αρχικοποίηση μεταβλητών γραμματοσειρών(font attributes)
         self.initial_fonts = {
@@ -48,11 +55,6 @@ class ScreenManager:
         if ScreenManager.canvas_count == 1:
             ScreenManager.initial_cnv_width = self.canvas.winfo_width()
             ScreenManager.initial_cnv_height = self.canvas.winfo_height()
-        # print(
-        # f"\n[DEBUG] Created instance #{self.instance_id} of class: {self.__class__.__name__}"
-        # )
-        # print(f"\n[DEBUG] Attributes of instance #{self.instance_id}: {self.__dict__}")
-        # print(f"\nπλήθος attributes ScreenManager: {self.__dict__.keys()}")
 
     def show_error(self, message):
         from tkinter import messagebox
@@ -238,9 +240,6 @@ class ScreenManager:
 class MainMenu(ScreenManager):
     def __init__(self, canvas, controller):
         super().__init__(canvas)
-        # print(f"\n[DEBUG]instance attributes_MainMenu: {self.__dict__}")
-        # print(f"\nπλήθος attributes MainMenu: {(self.__dict__).keys()}")
-        # print(f"\n[DEBUG] --> MainMenu initialized as instance #{self.instance_id}")
         self.controller = controller
 
     def build_screen(self):
@@ -285,16 +284,11 @@ class MainMenu(ScreenManager):
             button.pack(fill="x", padx=30, pady=10)
 
         self.canvas.bind("<Configure>", self.resize)
-        # print(f"\n[DEBUG]instance attributes_MainMenu: {self.__dict__}")
-        # print(f"\nπλήθος attributes MainMenu: {(self.__dict__).keys()}")
 
 
 class GameLevel(ScreenManager):
     def __init__(self, canvas, controller):
         super().__init__(canvas)
-        # print(f"\n[DEBUG] --> GameLevel initialized as instance #{self.instance_id}")
-        # print(f"\n[DEBUG] GameLevel attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
         self.controller = controller
 
     def build_screen(self):
@@ -325,8 +319,6 @@ class GameLevel(ScreenManager):
 
         # Δημιουργία κουμπιών επιπέδων δυσκολίας
         label_levels = ["Easy", "Medium", "Hard", "Back To Menu"]
-        # print(f"\n[DEBUG] GameLevel attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
         for label in label_levels:
             if label == "Back To Menu":
                 command = command = lambda: self.controller.show_screen("main_menu")
@@ -349,23 +341,18 @@ class GameLevel(ScreenManager):
 class PlayerSelection(ScreenManager):
     def __init__(self, canvas, level, controller):
         super().__init__(canvas)
-        # print(
-        #     f"[DEBUG] --> PlayerSelection initialized as instance #{self.instance_id}"
-        # )
-        # print(f"\n[DEBUG] PlayerSelection attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
         self.level = level
         self.controller = controller
 
     def update_data(self, level, players):
         self.level = level
         self.players = players
-        self.vs_computer = players == "Player - Computer"  # reset this
+        self.vs_computer = players == "Player - Computer"
         self.image_id = None
         self.lock_board = False
         self.current_player = "Player"
         self.deck_manager = None  # force reinitialization
-        self.card_widgets = []  # card ui cleanup
+        self.card_widgets = []
         self.player_order = []
         self.scores = {}
 
@@ -422,8 +409,6 @@ class PlayerSelection(ScreenManager):
             )
             button.pack(fill="x", padx=50, pady=10)
 
-        # print(f"\n[DEBUG] PlayerSelection attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
         # Binding event σε περίπτωση αλλαγής μεγέθους καμβά
         self.canvas.bind("<Configure>", self.resize)
 
@@ -436,16 +421,14 @@ class StartGame(ScreenManager):
     def __init__(self, canvas, level, players, controller):
         self.card_faces = {}  # image references
         super().__init__(canvas)
-        # print(f"[DEBUG] --> StartGame initialized as instance #{self.instance_id}")
-        # print(f"\n[DEBUG] StartGame attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
         self.level = level
         self.players = players
         self.controller = controller
         self.lock_board = False
         self.current_player = "Player"  # or index 0
         self.vs_computer = self.players == "Player - Computer"
-        # self.background_image(os.path.join('assets/images', 'poker_table.png'))
+        self.card_positions = {}  # at start of method or __init__
+
 
     def show_banner(self, text):
         if hasattr(self, "turn_banner"):
@@ -465,14 +448,7 @@ class StartGame(ScreenManager):
         self.players = players
         self.vs_computer = players == "Player - Computer"
 
-        # Rebuild player_order so that index(...) will work:
-        self.player_labels = {
-            "Players 2": ["Player 1", "Player 2"],
-            "Players 3": ["Player 1", "Player 2", "Player 3"],
-            "Players 4": ["Player 1", "Player 2", "Player 3", "Player 4"],
-            "Player - Computer": ["Player", "Computer"],
-        }
-        self.player_order = self.player_labels[self.players]
+        self.player_order = PLAYER_LABELS[self.players]
 
         self.lock_board = False
         self.current_player = "Player 1"
@@ -509,16 +485,10 @@ class StartGame(ScreenManager):
         self.relx_players_values = players_layout[self.level][self.players][0]
         self.anchor_players_values = players_layout[self.level][self.players][1]
 
-        # Ορισμός παικτών
-        self.player_labels = {
-            "Players 2": ["Player 1", "Player 2"],
-            "Players 3": ["Player 1", "Player 2", "Player 3"],
-            "Players 4": ["Player 1", "Player 2", "Player 3", "Player 4"],
-            "Player - Computer": ["Player", "Computer"],
-        }
+        self.player_order = PLAYER_LABELS[self.players]
 
         # Χρήσιμο για εναλλαγή σειράς παικτών
-        self.player_order = self.player_labels[self.players]
+        self.player_order = PLAYER_LABELS[self.players]
         self.current_player_index = 0
         self.current_player = self.player_order[self.current_player_index]
 
@@ -533,10 +503,6 @@ class StartGame(ScreenManager):
         self.show_banner(f"{self.current_player}'s turn")
 
         self.show_banner(f"{self.current_player}'s turn")
-
-        # print(
-        #     f"[DEBUG] FINAL TURN CHECK — vs_computer: {self.vs_computer}, current_player: {self.current_player}"
-        # )
 
         if self.vs_computer and self.current_player == "Computer":
             self.lock_board = True
@@ -609,18 +575,13 @@ class StartGame(ScreenManager):
         back_button.pack(side="left", fill="both")
 
         # Λεξικό προς χρήση για την δημιουργία κουμπιών των παικτών
-        self.player_labels = {
-            "Players 2": ["Player 1", "Player 2"],
-            "Players 3": ["Player 1", "Player 2", "Player 3"],
-            "Players 4": ["Player 1", "Player 2", "Player 3", "Player 4"],
-            "Player - Computer": ["Player", "Computer"],
-        }
+        self.player_order = PLAYER_LABELS[self.players]
 
         # Δημιουργία πλαισίων για τα κουμπιά των παικτών και για το σκορ
         self.list_frames = []
         # Δημιουργία πλαισίων για τα ονόματα των παικτών και για το σκορ
         self.list_frames = []
-        for i, name in enumerate(self.player_labels[self.players]):
+        for i, name in enumerate(PLAYER_LABELS[self.players]):
             frame = tk.Frame(self.canvas, bg="")
             self.list_frames.append(frame)
             frame.place(relx=self.relx_players_values[i], rely=0.9)
@@ -758,9 +719,6 @@ class StartGame(ScreenManager):
 
         board = self.deck_manager.board
 
-        # print(f"\n[DEBUG] StartGame attributes: {self.__dict__}")
-        # print(f"\nπλήθος attributes: {self.__dict__.keys()}")
-
         card_layout_settings = {
             "easy": (0.365, 0.1),
             "medium": (0.15, 0.1),
@@ -805,8 +763,8 @@ class StartGame(ScreenManager):
                             label.config(image=card_face, text="")
                             label.image = card_face
                         except Exception as e:
-                            print(
-                                f"[ERROR] Could not load card image: {card_path} | {e}"
+                            self.show_error(
+                                f"Could not load card image: {card_path} | {e}"
                             )
 
                     widget_row.append(label)
@@ -823,8 +781,6 @@ class StartGame(ScreenManager):
             self.lock_board or (self.vs_computer and self.current_player == "Computer")
         ):
             return
-
-        # print(f"[DEBUG] on_card_click: row={row}, col={col}, bypass={bypass_lock}")
 
         card = self.deck_manager.board[row][col]
         if card.is_open or card.is_matched:
@@ -851,7 +807,7 @@ class StartGame(ScreenManager):
             self.card_faces[f"{row}_{col}"] = card_face
             self.canvas.update()
         except Exception as e:
-            print(f"[ERROR] loading {card_path}: {e}")
+            self.show_error(f"error loading {card_path}: {e}")
             label.config(text="?", font=("Arial", 12), bg="red", fg="white")
 
         card.is_open = True
@@ -863,6 +819,14 @@ class StartGame(ScreenManager):
     def update_score_label(self, player):
         self.score_labels[player].config(text=f"Score: {self.scores[player]}")
 
+    def close_selected_cards(self):
+        for (r, c) in self.deck_manager.selected_cards:
+            lbl = self.card_widgets[r][c]
+            lbl.config(image=self.card_back)
+            lbl.image = self.card_back
+            self.deck_manager.board[r][c].is_open = False
+        self.deck_manager.selected_cards.clear()
+
     def resolve_turn(self):
         matched, pts, action = self.deck_manager.check_match()
 
@@ -872,12 +836,7 @@ class StartGame(ScreenManager):
 
 
             if action == "third_match_close_all":
-                for (r, c) in self.deck_manager.selected_cards:
-                    lbl = self.card_widgets[r][c]
-                    lbl.config(image=self.card_back)
-                    lbl.image = self.card_back
-                    self.deck_manager.board[r][c].is_open = False
-                self.deck_manager.selected_cards.clear()
+                self.close_selected_cards()
 
             if action == "allow_third":
                 self.lock_board = False
@@ -906,14 +865,8 @@ class StartGame(ScreenManager):
             self.check_game_over()
             return
 
-        # --- Περίπτωση “χωρίς ταίρι” (matched=False): κλείνουμε όλες τις selected_cards ---
-        for (r, c) in self.deck_manager.selected_cards:
-            lbl = self.card_widgets[r][c]
-            lbl.config(image=self.card_back)
-            lbl.image = self.card_back
-            self.deck_manager.board[r][c].is_open = False
-
-        self.deck_manager.selected_cards.clear()
+        # --- Περίπτωση “χωρίς ταίρι” (matched=False): κλείνουμε όλες τις selected_cards
+        self.close_selected_cards()
         self.lock_board = False
 
         self.current_player_index = (self.current_player_index + 1) % len(self.player_order)
@@ -1033,8 +986,8 @@ class StartGame(ScreenManager):
                     lbl.configure(image=card_face)
                     lbl.image = card_face
                 except Exception as e:
-                    print(
-                        f"[ERROR] Could not resize face card image: {card_path} | {e}"
+                    self.show_error(
+                        f"Could not resize face card image: {card_path} | {e}"
                     )
             else:
                 lbl.configure(image=self.card_back)
@@ -1053,7 +1006,7 @@ class StartGame(ScreenManager):
     def show_score(self):
         self.score_labels = {}
 
-        for i, player in enumerate(self.player_labels[self.players]):
+        for i, player in enumerate(PLAYER_LABELS[self.players]):
             frame = self.list_frames[i]
             label = tk.Label(
                 frame,
@@ -1073,15 +1026,13 @@ class StartGame(ScreenManager):
 
     def check_game_over(self):
         if self.deck_manager.is_game_over():
-            # print("[DEBUG] Game is over")
             winner = self.get_winner()
             if winner == "Tie":
-                message = f"🏁 Game Over! It's a tie!\nFinal Score: {self.scores}"
+                message = f"Game Over! It's a tie!\nFinal Score: {self.scores}"
             else:
-                message = f"🏁 Game Over! {winner} wins!\nFinal Score: {self.scores}"
+                message = f"Game Over! {winner} wins!\nFinal Score: {self.scores}"
 
             messagebox.showinfo("Game Over", message)
-
             self.controller.show_screen("main_menu")
 
     def get_winner(self):
@@ -1145,12 +1096,12 @@ class GuiController:
                 )
 
             start_screen = self.screens["start_game"]
-            start_screen.update_data(level, players)
+            start_screen.update_data(level, players) # type: ignore
 
             start_screen.deck_manager = deck_manager
             start_screen.current_player = current_player
 
-            start_screen.current_player_index = start_screen.player_order.index(
+            start_screen.current_player_index = start_screen.player_order.index( # type: ignore
                 current_player
             )
             start_screen.scores = scores
