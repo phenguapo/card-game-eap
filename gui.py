@@ -691,15 +691,6 @@ class StartGame(ScreenManager):
         card_initial_size = self.card_photo.resize((self.card_width, self.card_height))
         self.card_back = ImageTk.PhotoImage(card_initial_size)
 
-        """ Δεδομένα προς χρήση από την μέθοδο cards_layout για την δημιουργία 
-        και τοποθέτηση της τράπουλας στην οθόνη """
-        if self.level == "Easy":
-            self.rows, self.columns = 2, 8
-        elif self.level == "Medium":
-            self.rows, self.columns = 4, 10
-        else:
-            self.rows, self.columns = 4, 13
-
         # Κλήση της μεθόδου για την εμφάνιση της τράπουλας
         self.cards_layout()
 
