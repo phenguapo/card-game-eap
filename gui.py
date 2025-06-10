@@ -932,7 +932,8 @@ class StartGame(ScreenManager):
             )
 
             if mate and mate in new_closed:
-                bd.history.remove(mate)
+                if mate in bd.history:
+                    bd.history.remove(mate)
                 self.on_card_click(mate[0], mate[1], bypass_lock=True)
             elif new_closed:
                 r2, c2 = random.choice(new_closed)
